@@ -1,2 +1,23 @@
 # OpenCrank
 Forever free indoor cycle training
+
+## Why?
+If you don't get why you should pay $15 per month to set the wattage of you Hometrainer: this is for you. Sure: You'll loose horrible 3D graphics.
+
+## Features
+
+- No setup required - just launch the website in you browser (chrome preferred) - feel free to use a local HTML file
+- Set the wattage 
+- Read the wattage and crank RPM
+
+## Next steps
+
+- Set your FTP / weight to display zone
+- Display historic wattage over past minutes
+- Predefine trainings based on current science (use JSON to make it easily extendable)
+
+## Guiding principles 
+
+- Always vibe code
+- Always compile into a single HTML file
+- No backend, everything is stored in your browser
