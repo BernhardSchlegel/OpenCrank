@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrank</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --border: #1e2330;
+      --accent: #e8ff00;
+      --accent2: #00d4ff;
+      --red: #ff3c3c;
+      --text: #c8cdd8;
+      --text-dim: #5a6070;
+      --glow: rgba(232, 255, 0, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232, 255, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 255, 0, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232, 255, 0, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 540px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .logo-main {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      box-shadow: none;
+      transition: all 0.3s;
+    }
+
+    .status-dot.connected {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(232, 255, 0, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.error {
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Metrics row */
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 16px 12px;
+      text-align: center;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+
+    .metric.power-card {
+      grid-column: 1 / -1;
+      padding: 24px;
+      border-color: rgba(232, 255, 0, 0.2);
+      background: linear-gradient(135deg, #111318 0%, #141a20 100%);
+    }
+
+    .metric-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .metric-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+
+    .metric-value.live {
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(232, 255, 0, 0.4);
+    }
+
+    .power-card .metric-value {
+      font-size: 80px;
+    }
+
+    .metric-unit {
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Target watts control */
+    .control-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 16px;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    }
+
+    .control-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .control-title {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .target-display {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 36px;
+      color: var(--accent2);
+      text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .target-unit {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-left: 4px;
+    }
+
+    /* Slider */
+    .slider-wrap {
+      margin-bottom: 20px;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      outline: none;
+      border-radius: 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--accent2);
+      cursor: pointer;
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-btns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .quick-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.15s;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: rgba(0, 212, 255, 0.05);
+    }
+
+    .btn {
+      padding: 14px 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0c10;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #fff;
+      box-shadow: 0 0 20px rgba(232, 255, 0, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .btn-secondary:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Connect section */
+    .connect-section {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .btn-connect {
+      width: 100%;
+      padding: 18px;
+      background: var(--accent);
+      color: #0a0c10;
+      border: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .btn-connect:hover {
+      background: #fff;
+      box-shadow: 0 0 30px rgba(232, 255, 0, 0.4);
+    }
+
+    .btn-disconnect {
+      width: 100%;
+      padding: 18px;
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-disconnect:hover {
+      background: rgba(255, 60, 60, 0.1);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .status-bar .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .status-bar.ok .dot {
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    .status-bar.err .dot {
+      background: var(--red);
+    }
+
+    #status-text {
+      flex: 1;
+    }
+
+    /* Power bar */
+    .power-bar-wrap {
+      height: 4px;
+      background: var(--border);
+      margin-top: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .power-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      width: 0%;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 8px rgba(232, 255, 0, 0.5);
+    }
+
+    /* No BT warning */
+    .no-bt {
+      text-align: center;
+      padding: 40px 24px;
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      background: rgba(255, 60, 60, 0.05);
+    }
+
+    .no-bt h2 {
+      color: var(--red);
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .no-bt p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+
+    .no-bt a {
+      color: var(--accent2);
+    }
+
+    /* Cadence + speed row */
+    .secondary-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .secondary-metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sm-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .sm-info {
+      flex: 1;
+    }
+
+    .sm-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 28px;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .sm-value.live {
+      color: var(--accent2);
+    }
+
+    .sm-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">
+        <span class="logo-sub">Torturing yourself should be free!</span>
+        <span class="logo-main">OpenCrank</span>
+      </div>
+      <div class="status-dot" id="statusDot"></div>
+    </header>
+
+    <div id="no-bt-warn" style="display:none" class="no-bt fade-in">
+      <h2>⚠ NO BLUETOOTH</h2>
+      <p>Web Bluetooth is required. Use <strong>Chrome</strong> or <strong>Edge</strong> on desktop/Android.<br><br>
+        Safari and Firefox do not support Web Bluetooth.<br><br>
+        Enable it at <a href="#">chrome://flags/#enable-web-bluetooth</a> if needed.</p>
+    </div>
+
+    <div id="main-ui">
+      <!-- Status bar -->
+      <div class="status-bar" id="statusBar">
+        <div class="dot"></div>
+        <span id="status-text">Not connected — press CONNECT to start</span>
+      </div>
+
+      <!-- Power metric (big) -->
+      <div class="metrics" style="margin-bottom:12px">
+        <div class="metric power-card">
+          <div class="metric-label">Current Power</div>
+          <div class="metric-value" id="powerVal">---</div>
+          <div class="metric-unit">Watts</div>
+          <div class="power-bar-wrap">
+            <div class="power-bar-fill" id="powerBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cadence + HR -->
+      <div class="secondary-metrics">
+        <div class="secondary-metric">
+          <div class="sm-icon">⚙</div>
+          <div class="sm-info">
+            <div class="sm-value" id="cadenceVal">--</div>
+            <div class="sm-label">RPM · Cadence</div>
+          </div>
+        </div>
+        <div class="secondary-metric">
+          <div class="sm-icon">♥</div>
+          <div class="sm-info">
+            <div class="sm-value" id="hrVal">--</div>
+            <div class="sm-label">BPM · Heart Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control panel -->
+      <div class="control-panel" id="controlPanel" style="display:none">
+        <div class="control-header">
+          <span class="control-title">Target Power</span>
+          <span><span class="target-display" id="targetDisplay">150</span><span class="target-unit">W</span></span>
+        </div>
+
+        <!-- Quick presets -->
+        <div class="quick-btns">
+          <button class="quick-btn" onclick="setQuick(100)">100W</button>
+          <button class="quick-btn" onclick="setQuick(150)">150W</button>
+          <button class="quick-btn" onclick="setQuick(200)">200W</button>
+          <button class="quick-btn" onclick="setQuick(250)">250W</button>
+        </div>
+
+        <div class="slider-wrap">
+          <input type="range" id="wattsSlider" min="0" max="400" value="150" step="5" oninput="onSlider(this.value)">
+          <div class="slider-labels">
+            <span>0W</span>
+            <span>100W</span>
+            <span>200W</span>
+            <span>300W</span>
+            <span>400W</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="decreaseBtn" onclick="adjustWatts(-10)">− 10W</button>
+          <button class="btn btn-secondary" id="increaseBtn" onclick="adjustWatts(+10)">+ 10W</button>
+        </div>
+
+        <div style="margin-top:12px">
+          <button class="btn btn-primary" id="applyBtn" onclick="applyWatts()" style="width:100%">APPLY TARGET</button>
+        </div>
+      </div>
+
+      <!-- Connect / disconnect -->
+      <div class="connect-section">
+        <button class="btn-connect" id="connectBtn" onclick="connectKickr()">⚡ CONNECT TRAINER</button>
+        <button class="btn-disconnect" id="disconnectBtn" onclick="disconnectKickr()"
+          style="display:none">DISCONNECT</button>
+        <div class="hint" id="hintText">Requires Chrome or Edge · Web Bluetooth</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── BLE UUIDs ───────────────────────────────────────────────────────────────
+    const FITNESS_MACHINE_SERVICE = 0x1826;
+    const FTMS_CONTROL_POINT = '00002ad9-0000-1000-8000-00805f9b34fb';
+    const INDOOR_BIKE_DATA = '00002ad2-0000-1000-8000-00805f9b34fb';
+
+    const CYCLING_POWER_SERVICE = 0x1818;
+    const CYCLING_POWER_MEASUREMENT = '00002a63-0000-1000-8000-00805f9b34fb';
+
+    const HEART_RATE_SERVICE = 0x180d;
+    const HEART_RATE_MEASUREMENT = '00002a37-0000-1000-8000-00805f9b34fb';
+
+    // ─── State ───────────────────────────────────────────────────────────────────
+    let device = null;
+    let server = null;
+    let controlChar = null;
+    let targetWatts = 150;
+    let connected = false;
+
+    // ─── DOM refs ────────────────────────────────────────────────────────────────
+    const statusDot = document.getElementById('statusDot');
+    const statusBar = document.getElementById('statusBar');
+    const statusText = document.getElementById('status-text');
+    const powerVal = document.getElementById('powerVal');
+    const cadenceVal = document.getElementById('cadenceVal');
+    const hrVal = document.getElementById('hrVal');
+    const powerBar = document.getElementById('powerBar');
+    const targetDisp = document.getElementById('targetDisplay');
+    const slider = document.getElementById('wattsSlider');
+    const controlPanel = document.getElementById('controlPanel');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+
+    // ─── Check BT support ────────────────────────────────────────────────────────
+    if (!navigator.bluetooth) {
+      document.getElementById('no-bt-warn').style.display = 'block';
+      document.getElementById('main-ui').style.display = 'none';
+    }
+
+    // ─── UI helpers ──────────────────────────────────────────────────────────────
+    function setStatus(msg, type = '') {
+      statusText.textContent = msg;
+      statusBar.className = 'status-bar' + (type ? ' ' + type : '');
+    }
+
+    function setConnected(val) {
+      connected = val;
+      statusDot.className = 'status-dot' + (val ? ' connected' : '');
+      controlPanel.style.display = val ? 'block' : 'none';
+      connectBtn.style.display = val ? 'none' : 'block';
+      disconnectBtn.style.display = val ? 'block' : 'none';
+      if (!val) {
+        powerVal.textContent = '---';
+        powerVal.classList.remove('live');
+        cadenceVal.textContent = '--';
+        hrVal.textContent = '--';
+        powerBar.style.width = '0%';
+        document.querySelectorAll('.sm-value').forEach(el => el.classList.remove('live'));
+      }
+    }
+
+    function onSlider(v) {
+      targetWatts = parseInt(v);
+      targetDisp.textContent = targetWatts;
+    }
+
+    function setQuick(w) {
+      targetWatts = w;
+      slider.value = w;
+      targetDisp.textContent = w;
+    }
+
+    function adjustWatts(delta) {
+      targetWatts = Math.max(0, Math.min(400, targetWatts + delta));
+      slider.value = targetWatts;
+      targetDisp.textContent = targetWatts;
+    }
+
+    // ─── BLE connection ──────────────────────────────────────────────────────────
+    async function connectKickr() {
+      connectBtn.disabled = true;
+      setStatus('Scanning for KICKR…');
+
+      try {
+        device = await navigator.bluetooth.requestDevice({
+          filters: [{ services: [FITNESS_MACHINE_SERVICE] }],
+          optionalServices: [CYCLING_POWER_SERVICE, HEART_RATE_SERVICE]
+        });
+
+        setStatus('Connecting…');
+        device.addEventListener('gattserverdisconnected', onDisconnected);
+
+        server = await device.gatt.connect();
+        setStatus('Discovering services…');
+
+        // ── Fitness Machine Service (Indoor Bike Data + Control) ──────────────
+        let ftmsService = null;
+        try {
+          ftmsService = await server.getPrimaryService(FITNESS_MACHINE_SERVICE);
+        } catch (e) { /* may not be present */ }
+
+        if (ftmsService) {
+          // Control point
+          try {
+            controlChar = await ftmsService.getCharacteristic(FTMS_CONTROL_POINT);
+            // Request control
+            await controlChar.writeValue(new Uint8Array([0x00]));
+          } catch (e) { console.warn('Control point not writable:', e); }
+
+          // Indoor Bike Data notifications
+          try {
+            const bikeData = await ftmsService.getCharacteristic(INDOOR_BIKE_DATA);
+            await bikeData.startNotifications();
+            bikeData.addEventListener('characteristicvaluechanged', onBikeData);
+          } catch (e) { console.warn('Indoor bike data unavailable:', e); }
+        }
+
+        // ── Cycling Power Service (fallback for power) ────────────────────────
+        try {
+          const cpService = await server.getPrimaryService(CYCLING_POWER_SERVICE);
+          const cpMeas = await cpService.getCharacteristic(CYCLING_POWER_MEASUREMENT);
+          await cpMeas.startNotifications();
+          cpMeas.addEventListener('characteristicvaluechanged', onPowerMeasurement);
+        } catch (e) { /* not all KICKRs expose this separately */ }
+
+        // ── Heart Rate ────────────────────────────────────────────────────────
+        try {
+          const hrService = await server.getPrimaryService(HEART_RATE_SERVICE);
+          const hrMeas = await hrService.getCharacteristic(HEART_RATE_MEASUREMENT);
+          await hrMeas.startNotifications();
+          hrMeas.addEventListener('characteristicvaluechanged', onHRMeasurement);
+        } catch (e) { /* no HR sensor attached */ }
+
+        setConnected(true);
+        setStatus(`Connected to ${device.name || 'KICKR'}`, 'ok');
+
+      } catch (err) {
+        if (err.name === 'NotFoundError') {
+          setStatus('No device selected.');
+        } else {
+          setStatus(`Error: ${err.message}`, 'err');
+          statusDot.className = 'status-dot error';
+        }
+        connectBtn.disabled = false;
+      }
+    }
+
+    function disconnectKickr() {
+      if (device && device.gatt.connected) {
+        device.gatt.disconnect();
+      }
+    }
+
+    function onDisconnected() {
+      setConnected(false);
+      controlChar = null;
+      setStatus('Disconnected.');
+      connectBtn.disabled = false;
+    }
+
+    // ─── Data parsers ─────────────────────────────────────────────────────────────
+    function onBikeData(event) {
+      const data = event.target.value;
+      // FTMS Indoor Bike Data flags (2 bytes)
+      const flags = data.getUint16(0, true);
+      let offset = 2;
+
+      // Bit 0: More Data (if 0, instantaneous speed present)
+      const hasSpeed = !(flags & 0x0001);
+      if (hasSpeed) { offset += 2; } // km/h * 100, little-endian (skip for now)
+
+      // Bit 1: Average Speed
+      if (flags & 0x0002) offset += 2;
+
+      // Bit 2: Instantaneous Cadence
+      let cadence = null;
+      if (flags & 0x0004) {
+        if (offset + 1 < data.byteLength) {
+          cadence = data.getUint16(offset, true) / 2; // 0.5 rpm resolution
+        }
+        offset += 2;
+      }
+
+      // Bit 3: Average Cadence
+      if (flags & 0x0008) offset += 2;
+
+      // Bit 4: Total Distance
+      if (flags & 0x0010) offset += 3;
+
+      // Bit 5: Resistance Level
+      if (flags & 0x0020) offset += 2;
+
+      // Bit 6: Instantaneous Power
+      let power = null;
+      if (flags & 0x0040) {
+        if (offset + 1 < data.byteLength) {
+          power = data.getInt16(offset, true);
+        }
+        offset += 2;
+      }
+
+      if (power !== null) updatePower(power);
+      if (cadence !== null) updateCadence(Math.round(cadence));
+    }
+
+    function onPowerMeasurement(event) {
+      const data = event.target.value;
+      // Cycling Power Measurement: flags (2) + instant power (2) + ...
+      if (data.byteLength >= 4) {
+        const power = data.getInt16(2, true);
+        updatePower(power);
+      }
+    }
+
+    function onHRMeasurement(event) {
+      const data = event.target.value;
+      const flags = data.getUint8(0);
+      const hr = (flags & 0x01) ? data.getUint16(1, true) : data.getUint8(1);
+      hrVal.textContent = hr;
+      hrVal.classList.add('live');
+    }
+
+    function updatePower(watts) {
+      powerVal.textContent = Math.max(0, watts);
+      powerVal.classList.add('live');
+      const pct = Math.min(100, (Math.max(0, watts) / 400) * 100);
+      powerBar.style.width = pct + '%';
+    }
+
+    function updateCadence(rpm) {
+      cadenceVal.textContent = rpm;
+      cadenceVal.classList.add('live');
+    }
+
+    // ─── Set target power ─────────────────────────────────────────────────────────
+    async function applyWatts() {
+      if (!controlChar) {
+        setStatus('Not connected or control not available.', 'err');
+        return;
+      }
+      try {
+        // Op Code 0x05 = Set Target Power, data = int16 little-endian (watts)
+        const buf = new DataView(new ArrayBuffer(3));
+        buf.setUint8(0, 0x05);
+        buf.setInt16(1, targetWatts, true);
+        await controlChar.writeValueWithResponse(buf.buffer);
+        setStatus(`Target set to ${targetWatts}W`, 'ok');
+      } catch (err) {
+        // Some trainers need re-request control first
+        try {
+          await controlChar.writeValue(new Uint8Array([0x00]));
+          const buf = new DataView(new ArrayBuffer(3));
+          buf.setUint8(0, 0x05);
+          buf.setInt16(1, targetWatts, true);
+          await controlChar.writeValueWithResponse(buf.buffer);
+          setStatus(`Target set to ${targetWatts}W`, 'ok');
+        } catch (e) {
+          setStatus(`Failed to set power: ${e.message}`, 'err');
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
