@@ -16,6 +16,7 @@ If you don't get why you should pay $15 per month to set the wattage of you Home
 - Set your FTP / weight to display zone
 - Display historic wattage over past minutes
 - Predefine trainings based on current science (use JSON to make it easily extendable)
+- Create a cool logo
 
 ## Guiding principles 
 
