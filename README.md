@@ -9,6 +9,7 @@ If you don't get why you should pay $15 per month to set the wattage of you Home
 - No setup required - just launch the website in you browser (chrome preferred) - feel free to use a local HTML file
 - Set the wattage 
 - Read the wattage and crank RPM
+- Tested on Kickr Core 2
 
 ## Next steps
 
