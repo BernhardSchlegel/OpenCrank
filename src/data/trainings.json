@@ -1,0 +1,144 @@
+[
+  {
+    "name": "Aerobic Base / Zone 2",
+    "description": "Mitochondrial fitness, fat oxidation, recovery capacity. The foundation of all endurance.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      { "type": "relative", "load_rel": 67, "name": "Zone 2 Steady", "duration_s": 4500 },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Sweet Spot",
+    "description": "Improve FTP with manageable fatigue. The most time-efficient endurance work.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 3,
+        "steps": [
+          { "type": "relative", "load_rel": 90, "name": "Sweet Spot", "duration_s": 900 },
+          { "type": "relative", "load_rel": 45, "name": "Recovery", "duration_s": 300 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Threshold / FTP Intervals",
+    "description": "Raise lactate threshold with hard but controlled sustained efforts.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 900 },
+      {
+        "type": "repeat",
+        "repeat_times": 4,
+        "steps": [
+          { "type": "relative", "load_rel": 100, "name": "Threshold", "duration_s": 600 },
+          { "type": "relative", "load_rel": 40, "name": "Easy", "duration_s": 300 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Rønnestad Intervals",
+    "description": "Increase VO₂max and high-end aerobic power. Very effective but brutal.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 3,
+        "steps": [
+          {
+            "type": "repeat",
+            "repeat_times": 13,
+            "steps": [
+              { "type": "relative", "load_rel": 125, "name": "Hard", "duration_s": 30 },
+              { "type": "relative", "load_rel": 40, "name": "Easy", "duration_s": 15 }
+            ]
+          },
+          { "type": "relative", "load_rel": 40, "name": "Set Recovery", "duration_s": 180 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "4×8 min VO₂max",
+    "description": "Highly effective for aerobic gains. You can survive, but won't want another minute.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 4,
+        "steps": [
+          { "type": "relative", "load_rel": 107, "name": "VO₂max", "duration_s": 480 },
+          { "type": "relative", "load_rel": 40, "name": "Recovery", "duration_s": 150 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Microbursts / 30-30s",
+    "description": "VO₂max work with lower mental fatigue. Short, intense, and surprisingly effective.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 2,
+        "steps": [
+          {
+            "type": "repeat",
+            "repeat_times": 12,
+            "steps": [
+              { "type": "relative", "load_rel": 125, "name": "Hard", "duration_s": 30 },
+              { "type": "relative", "load_rel": 40, "name": "Easy", "duration_s": 30 }
+            ]
+          },
+          { "type": "relative", "load_rel": 40, "name": "Set Recovery", "duration_s": 180 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Over-Unders",
+    "description": "Lactate clearance and race-specific fitness. Feels terrible — in a productive way.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 3,
+        "steps": [
+          {
+            "type": "repeat",
+            "repeat_times": 4,
+            "steps": [
+              { "type": "relative", "load_rel": 95, "name": "Under", "duration_s": 120 },
+              { "type": "relative", "load_rel": 107, "name": "Over", "duration_s": 60 }
+            ]
+          },
+          { "type": "relative", "load_rel": 40, "name": "Recovery", "duration_s": 300 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
+    "name": "Sprint / Neuromuscular Power",
+    "description": "Increase top-end sprint power. Peak neuromuscular output with full recovery between efforts.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 600 },
+      {
+        "type": "repeat",
+        "repeat_times": 10,
+        "steps": [
+          { "type": "relative", "load_rel": 200, "name": "Sprint", "duration_s": 12 },
+          { "type": "relative", "load_rel": 40, "name": "Full Recovery", "duration_s": 180 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  }
+]

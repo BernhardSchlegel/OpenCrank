@@ -1,0 +1,14 @@
+{
+  "name": "opencrank",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "build:min": "node build.js --minify"
+  },
+  "devDependencies": {
+    "@types/web-bluetooth": "^0.0.20",
+    "esbuild": "^0.25.0"
+  }
+}

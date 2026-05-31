@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrank</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,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">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet">
+  <!-- STYLES -->
+</head>
+
+<body>
+
+  <!-- ── Home page ─────────────────────────────────────────────────────────── -->
+  <div id="page-home" class="page">
+    <div class="app">
+      <header>
+        <div class="logo">
+          <img src="data:image/png;base64,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" alt="OpenCrank" class="logo-img">
+          <div class="logo-text">
+            <span class="logo-sub">Torturing yourself should be free!</span>
+            <span class="logo-main">OpenCrank</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="https://github.com/BernhardSchlegel/OpenCrank" target="_blank" rel="noopener" class="github-link" title="OpenCrank on GitHub">
+            <svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23a11.5 11.5 0 0 1 3-.405c1.02.005 2.045.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+            </svg>
+          </a>
+          <div class="status-dot" id="statusDot"></div>
+        </div>
+      </header>
+
+      <div id="no-bt-warn" style="display:none" class="no-bt fade-in">
+        <h2>⚠ NO BLUETOOTH</h2>
+        <p>Web Bluetooth is required. Use <strong>Chrome</strong> or <strong>Edge</strong> on desktop/Android.<br><br>
+          Safari and Firefox do not support Web Bluetooth.<br><br>
+          Enable it at <a href="#">chrome://flags/#enable-web-bluetooth</a> if needed.</p>
+      </div>
+
+      <div id="main-ui">
+        <div class="status-bar" id="statusBar">
+          <div class="dot"></div>
+          <span id="status-text">Not connected — press CONNECT to start</span>
+        </div>
+
+        <!-- Target card — visible during active training -->
+        <div id="targetBlock" style="display:none; margin-bottom:12px">
+          <div class="metric target-card">
+            <div class="metric-label">Target Power</div>
+            <div class="target-watts" id="targetWatts">---</div>
+            <div class="metric-unit">Watts</div>
+            <div class="target-meta">
+              <span id="segName"></span>
+              <span id="segRemain"></span>
+              <span id="segProgress"></span>
+            </div>
+            <div class="seg-progress-wrap">
+              <div class="seg-progress-fill" id="segProgressBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session controls card — visible during active training -->
+        <div id="sessionControls" style="display:none; margin-bottom:12px">
+          <div class="metric session-ctrl-card">
+            <div class="session-ctrl-row">
+              <button class="btn btn-secondary session-ctrl-btn" id="effortDownBtn">− EFFORT</button>
+              <button class="btn btn-secondary session-ctrl-btn" id="pauseBtn">⏸ PAUSE</button>
+              <button class="btn btn-secondary session-ctrl-btn" id="effortUpBtn">+ EFFORT</button>
+            </div>
+            <div class="session-ctrl-row session-ctrl-row--bottom">
+              <button class="btn btn-secondary session-ctrl-btn" id="skipBtn">⏭ SKIP STEP</button>
+              <button class="btn btn-secondary session-ctrl-btn session-ctrl-btn--end" id="endBtn">■ END</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics" style="margin-bottom:12px">
+          <div class="metric power-card">
+            <div class="metric-label">Current Power</div>
+            <div class="metric-value" id="powerVal">---</div>
+            <div class="metric-unit">Watts</div>
+            <div class="live-chart-wrap" id="liveChartWrap"></div>
+          </div>
+        </div>
+
+        <div class="secondary-metrics">
+          <div class="secondary-metric">
+            <div class="sm-icon">⚙</div>
+            <div class="sm-info">
+              <div class="sm-value" id="cadenceVal">--</div>
+              <div class="sm-label">RPM · Cadence</div>
+            </div>
+          </div>
+          <div class="secondary-metric">
+            <div class="sm-icon">♥</div>
+            <div class="sm-info">
+              <div class="sm-value" id="hrVal">--</div>
+              <div class="sm-label">BPM · Heart Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected training card — visible when a training is chosen but not yet started -->
+        <div class="control-panel" id="selectedTrainingBlock" style="display:none">
+          <div class="control-title" style="margin-bottom:10px">SELECTED TRAINING</div>
+          <div id="selTrainingName" class="selected-training-name"></div>
+          <div id="selTrainingDesc" class="selected-training-desc"></div>
+          <button class="btn btn-primary" id="selectedStartBtn" style="width:100%; margin-top:20px" disabled>START TRAINING</button>
+        </div>
+
+        <!-- Manual target power — visible when connected with no training selected -->
+        <div class="control-panel" id="controlPanel" style="display:none">
+          <div class="control-header">
+            <span class="control-title">Target Power</span>
+            <span><span class="target-display" id="targetDisplay">150</span><span class="target-unit">W</span></span>
+          </div>
+
+          <div class="quick-btns">
+            <button class="quick-btn" data-watts="100">100W</button>
+            <button class="quick-btn" data-watts="150">150W</button>
+            <button class="quick-btn" data-watts="200">200W</button>
+            <button class="quick-btn" data-watts="250">250W</button>
+          </div>
+
+          <div class="slider-wrap">
+            <input type="range" id="wattsSlider" min="0" max="400" value="150" step="5">
+            <div class="slider-labels">
+              <span>0W</span>
+              <span>100W</span>
+              <span>200W</span>
+              <span>300W</span>
+              <span>400W</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="decreaseBtn">− 10W</button>
+            <button class="btn btn-secondary" id="increaseBtn">+ 10W</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <button class="btn btn-primary" id="applyBtn" style="width:100%">APPLY TARGET</button>
+          </div>
+        </div>
+
+        <div class="connect-section">
+          <button class="btn-connect" id="connectBtn">⚡ CONNECT TRAINER</button>
+          <button class="btn-disconnect" id="disconnectBtn" style="display:none">DISCONNECT</button>
+          <div class="hint" id="hintText">Requires Chrome or Edge · Web Bluetooth</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Training page ──────────────────────────────────────────────────────── -->
+  <div id="page-training" class="page" hidden>
+    <div class="app">
+      <header>
+        <div class="logo">
+          <span class="logo-sub">Structured suffering</span>
+          <span class="logo-main">Trainings</span>
+        </div>
+      </header>
+      <div id="training-list"></div>
+    </div>
+  </div>
+
+  <!-- ── Settings page ──────────────────────────────────────────────────────── -->
+  <div id="page-settings" class="page" hidden>
+    <div class="app">
+      <header>
+        <div class="logo">
+          <span class="logo-sub">Preferences &amp; device</span>
+          <span class="logo-main">Settings</span>
+        </div>
+      </header>
+
+      <div class="control-panel">
+        <div class="control-header">
+          <div>
+            <div class="control-title">FTP</div>
+            <div class="setting-sublabel">Functional Threshold Power</div>
+          </div>
+          <span>
+            <input type="number" id="ftpInput" class="ftp-input" min="50" max="600" value="200">
+            <span class="target-unit">W</span>
+          </span>
+        </div>
+        <button class="btn btn-primary" id="saveFtpBtn" style="width:100%; margin-top:20px">SAVE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Bottom nav ─────────────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <button class="nav-btn" data-page="training" onclick="location.hash='training'">
+      <span class="nav-icon">◈</span>
+      <span>Trainings</span>
+    </button>
+    <button class="nav-btn active" data-page="home" onclick="location.hash='home'">
+      <span class="nav-icon">⚡</span>
+      <span>RIDE</span>
+    </button>
+    <button class="nav-btn" data-page="settings" onclick="location.hash='settings'">
+      <span class="nav-icon">⚙</span>
+      <span>Setup</span>
+    </button>
+  </nav>
+
+  <!-- SCRIPTS -->
+</body>
+
+</html>
