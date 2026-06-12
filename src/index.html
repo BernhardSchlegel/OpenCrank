@@ -54,9 +54,9 @@
             <div class="metric-label">Target Power</div>
             <div class="target-watts" id="targetWatts">---</div>
             <div class="metric-unit">Watts</div>
+            <div class="seg-remain-display" id="segRemain"></div>
             <div class="target-meta">
               <span id="segName"></span>
-              <span id="segRemain"></span>
               <span id="segProgress"></span>
             </div>
             <div class="seg-progress-wrap">
@@ -212,6 +212,16 @@
       <span>Setup</span>
     </button>
   </nav>
+
+  <!-- Good Job popup -->
+  <div id="goodJobPopup" style="display:none" class="good-job-overlay">
+    <div class="good-job-card">
+      <div class="good-job-icon">🏆</div>
+      <div class="good-job-title">GOOD JOB!</div>
+      <div class="good-job-sub">Training complete</div>
+      <button class="btn btn-primary" id="goodJobDismiss" style="width:100%; margin-top:24px">DONE</button>
+    </div>
+  </div>
 
   <!-- SCRIPTS -->
 </body>

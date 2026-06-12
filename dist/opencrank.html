@@ -819,6 +819,65 @@ input[type=number].ftp-input:focus {
   border-bottom-color: var(--accent2);
   text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
 }
+
+/* Remaining time — large glowing display in target card */
+.seg-remain-display {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--accent2);
+  text-shadow: 0 0 18px rgba(0, 212, 255, 0.7), 0 0 40px rgba(0, 212, 255, 0.25);
+  margin: 8px 0 6px;
+  letter-spacing: 3px;
+}
+
+/* Good Job popup */
+.good-job-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 16, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(6px);
+}
+
+.good-job-card {
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 0 50px rgba(232, 255, 0, 0.15);
+  animation: fadeIn 0.4s ease forwards;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.good-job-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.good-job-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 5px;
+  text-shadow: 0 0 20px rgba(232, 255, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+.good-job-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
+}
   </style>
 </head>
 
@@ -864,9 +923,9 @@ input[type=number].ftp-input:focus {
             <div class="metric-label">Target Power</div>
             <div class="target-watts" id="targetWatts">---</div>
             <div class="metric-unit">Watts</div>
+            <div class="seg-remain-display" id="segRemain"></div>
             <div class="target-meta">
               <span id="segName"></span>
-              <span id="segRemain"></span>
               <span id="segProgress"></span>
             </div>
             <div class="seg-progress-wrap">
@@ -1022,6 +1081,16 @@ input[type=number].ftp-input:focus {
       <span>Setup</span>
     </button>
   </nav>
+
+  <!-- Good Job popup -->
+  <div id="goodJobPopup" style="display:none" class="good-job-overlay">
+    <div class="good-job-card">
+      <div class="good-job-icon">🏆</div>
+      <div class="good-job-title">GOOD JOB!</div>
+      <div class="good-job-sub">Training complete</div>
+      <button class="btn btn-primary" id="goodJobDismiss" style="width:100%; margin-top:24px">DONE</button>
+    </div>
+  </div>
 
   <script>
 "use strict";
@@ -1252,6 +1321,7 @@ input[type=number].ftp-input:focus {
   var effortPct = 100;
   var listeners = /* @__PURE__ */ new Set();
   var selectListeners = /* @__PURE__ */ new Set();
+  var completionListeners = /* @__PURE__ */ new Set();
   var notify = () => listeners.forEach((cb) => cb());
   var notifySelect = () => selectListeners.forEach((cb) => cb());
   function selectTraining(training) {
@@ -1320,6 +1390,7 @@ input[type=number].ftp-input:focus {
     const elapsed = (performance.now() - startTs - pausedDuration - frozenPause) / 1e3;
     if (elapsed >= totalDur) {
       stopSession();
+      completionListeners.forEach((cb) => cb());
       return null;
     }
     let idx = 0;
@@ -1340,6 +1411,10 @@ input[type=number].ftp-input:focus {
     listeners.add(cb);
     return () => listeners.delete(cb);
   }
+  function onSessionComplete(cb) {
+    completionListeners.add(cb);
+    return () => completionListeners.delete(cb);
+  }
 
   // src/pages/home.ts
   var FITNESS_MACHINE_SERVICE = 6182;
@@ -1353,6 +1428,7 @@ input[type=number].ftp-input:focus {
   var controlChar = null;
   var targetWatts = 150;
   var chart = null;
+  var wakeLock = null;
   var statusDot;
   var statusBar;
   var statusText;
@@ -1380,6 +1456,22 @@ input[type=number].ftp-input:focus {
   var segRemainEl;
   var segProgressEl;
   var segProgressBar;
+  async function acquireWakeLock() {
+    if (!("wakeLock" in navigator)) return;
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+    } catch {
+    }
+  }
+  function releaseWakeLock() {
+    wakeLock == null ? void 0 : wakeLock.release().catch(() => {
+    });
+    wakeLock = null;
+  }
+  function showGoodJob() {
+    const popup = document.getElementById("goodJobPopup");
+    popup.style.display = "flex";
+  }
   function mm_ss(sec) {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
@@ -1630,6 +1722,7 @@ input[type=number].ftp-input:focus {
     selectedStartBtn.addEventListener("click", () => {
       startSession();
       tickSession();
+      acquireWakeLock();
     });
     pauseBtn.addEventListener("click", () => {
       isPaused() ? resumeSession() : pauseSession();
@@ -1637,7 +1730,17 @@ input[type=number].ftp-input:focus {
     effortDownBtn.addEventListener("click", () => adjustEffort(-5));
     effortUpBtn.addEventListener("click", () => adjustEffort(5));
     skipBtn.addEventListener("click", skipStep);
-    endBtn.addEventListener("click", stopSession);
+    endBtn.addEventListener("click", () => {
+      stopSession();
+      releaseWakeLock();
+    });
+    onSessionComplete(() => {
+      releaseWakeLock();
+      showGoodJob();
+    });
+    document.getElementById("goodJobDismiss").addEventListener("click", () => {
+      document.getElementById("goodJobPopup").style.display = "none";
+    });
     onTrainingSelect(refreshRideButtons);
   }
 
@@ -1764,6 +1867,22 @@ input[type=number].ftp-input:focus {
               ]
             },
             { type: "relative", load_rel: 40, name: "Recovery", duration_s: 300 }
+          ]
+        },
+        { type: "relative", load_rel: 40, name: "Cooldown", duration_s: 600 }
+      ]
+    },
+    {
+      name: "4\xD74 min @ 115% VO\u2082max",
+      description: "4 min hard at 115% FTP, 3 min easy spin, repeated 4 times. Builds VO\u2082max with a gentle warm-up and proper cool-down.",
+      steps: [
+        { type: "relative", load_rel: 50, name: "Warm-up", duration_s: 720 },
+        {
+          type: "repeat",
+          repeat_times: 4,
+          steps: [
+            { type: "relative", load_rel: 115, name: "VO\u2082max", duration_s: 240 },
+            { type: "relative", load_rel: 50, name: "Easy Spin", duration_s: 180 }
           ]
         },
         { type: "relative", load_rel: 40, name: "Cooldown", duration_s: 600 }

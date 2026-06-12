@@ -7,6 +7,10 @@ Forever free indoor cycle training
 ## Why?
 If you don't get why you should pay $15 per month to set the wattage of you Hometrainer: this is for you. Sure: You'll loose horrible 3D graphics.
 
+## How?
+
+Download this repo and open `/dist/opencrank.html` in your browser. Or go [opencrank.burnybikes.com](https://opencrank.burnybikes.com/).
+
 ## Features
 
 - No setup required - just launch the website in you browser (chrome preferred) - feel free to use a local HTML file

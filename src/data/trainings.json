@@ -126,6 +126,22 @@
     ]
   },
   {
+    "name": "4×4 min @ 115% VO₂max",
+    "description": "4 min hard at 115% FTP, 3 min easy spin, repeated 4 times. Builds VO₂max with a gentle warm-up and proper cool-down.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 720 },
+      {
+        "type": "repeat",
+        "repeat_times": 4,
+        "steps": [
+          { "type": "relative", "load_rel": 115, "name": "VO₂max", "duration_s": 240 },
+          { "type": "relative", "load_rel": 50, "name": "Easy Spin", "duration_s": 180 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 600 }
+    ]
+  },
+  {
     "name": "Sprint / Neuromuscular Power",
     "description": "Increase top-end sprint power. Peak neuromuscular output with full recovery between efforts.",
     "steps": [

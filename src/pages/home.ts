@@ -2,7 +2,7 @@ import { LiveChart } from '../components/power-chart';
 import {
   getSnapshot, onSessionChange, isActive, isPaused,
   startSession, pauseSession, resumeSession, adjustEffort, skipStep, stopSession,
-  getSelectedTraining, onTrainingSelect,
+  getSelectedTraining, onTrainingSelect, onSessionComplete,
 } from '../state/session';
 import { getFtp } from './settings';
 
@@ -20,6 +20,7 @@ let device: BluetoothDevice | null = null;
 let controlChar: BluetoothRemoteGATTCharacteristic | null = null;
 let targetWatts = 150;
 let chart: LiveChart | null = null;
+let wakeLock: WakeLockSentinel | null = null;
 
 // DOM refs
 let statusDot: HTMLElement;
@@ -50,6 +51,21 @@ let segNameEl: HTMLElement;
 let segRemainEl: HTMLElement;
 let segProgressEl: HTMLElement;
 let segProgressBar: HTMLElement;
+
+async function acquireWakeLock(): Promise<void> {
+  if (!('wakeLock' in navigator)) return;
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch { /* denied */ }
+}
+
+function releaseWakeLock(): void {
+  wakeLock?.release().catch(() => {});
+  wakeLock = null;
+}
+
+function showGoodJob(): void {
+  const popup = document.getElementById('goodJobPopup')!;
+  popup.style.display = 'flex';
+}
 
 function mm_ss(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -333,12 +349,18 @@ export function init(container: HTMLElement): void {
   document.getElementById('applyBtn')!.addEventListener('click', applyWatts);
   connectBtn.addEventListener('click', connectKickr);
   disconnectBtn.addEventListener('click', disconnectKickr);
-  selectedStartBtn.addEventListener('click', () => { startSession(); tickSession(); });
+  selectedStartBtn.addEventListener('click', () => { startSession(); tickSession(); acquireWakeLock(); });
   pauseBtn.addEventListener('click', () => { isPaused() ? resumeSession() : pauseSession(); });
   effortDownBtn.addEventListener('click', () => adjustEffort(-5));
   effortUpBtn.addEventListener('click', () => adjustEffort(5));
   skipBtn.addEventListener('click', skipStep);
-  endBtn.addEventListener('click', stopSession);
+  endBtn.addEventListener('click', () => { stopSession(); releaseWakeLock(); });
+
+  onSessionComplete(() => { releaseWakeLock(); showGoodJob(); });
+
+  document.getElementById('goodJobDismiss')!.addEventListener('click', () => {
+    document.getElementById('goodJobPopup')!.style.display = 'none';
+  });
 
   onTrainingSelect(refreshRideButtons);
 }

@@ -50,6 +50,7 @@ let effortPct = 100;
 
 const listeners = new Set<() => void>();
 const selectListeners = new Set<() => void>();
+const completionListeners = new Set<() => void>();
 
 const notify = () => listeners.forEach(cb => cb());
 const notifySelect = () => selectListeners.forEach(cb => cb());
@@ -123,7 +124,11 @@ export function getSnapshot(): SessionSnapshot | null {
   const frozenPause = isPaused() ? performance.now() - pausedAt : 0;
   const elapsed = (performance.now() - startTs - pausedDuration - frozenPause) / 1000;
 
-  if (elapsed >= totalDur) { stopSession(); return null; }
+  if (elapsed >= totalDur) {
+    stopSession();
+    completionListeners.forEach(cb => cb());
+    return null;
+  }
 
   let idx = 0;
   while (idx < segs.length - 1 && segs[idx + 1].startSec <= elapsed) idx++;
@@ -144,4 +149,9 @@ export function getSnapshot(): SessionSnapshot | null {
 export function onSessionChange(cb: () => void): () => void {
   listeners.add(cb);
   return () => listeners.delete(cb);
+}
+
+export function onSessionComplete(cb: () => void): () => void {
+  completionListeners.add(cb);
+  return () => completionListeners.delete(cb);
 }
