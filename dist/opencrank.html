@@ -1063,6 +1063,10 @@ input[type=number].ftp-input:focus {
         </div>
         <button class="btn btn-primary" id="saveFtpBtn" style="width:100%; margin-top:20px">SAVE</button>
       </div>
+
+      <div style="text-align:center; margin-top:24px; opacity:0.4; font-size:0.75rem; letter-spacing:0.08em;">
+        v0.1.1
+      </div>
     </div>
   </div>
 
@@ -1902,6 +1906,22 @@ input[type=number].ftp-input:focus {
           ]
         },
         { type: "relative", load_rel: 40, name: "Cooldown", duration_s: 600 }
+      ]
+    },
+    {
+      name: "VO\u2082 Max (4\xD74:10)",
+      description: "VO\u2082max intervals at ~117% FTP with half-length recovery. Tuned for a 230W FTP (270W load, 130W recovery) but scales to any FTP.",
+      steps: [
+        { type: "relative", load_rel: 50, name: "Warm-up", duration_s: 900 },
+        {
+          type: "repeat",
+          repeat_times: 4,
+          steps: [
+            { type: "relative", load_rel: 117, name: "VO\u2082max Load", duration_s: 250 },
+            { type: "relative", load_rel: 57, name: "Recovery", duration_s: 125 }
+          ]
+        },
+        { type: "relative", load_rel: 57, name: "Cooldown", duration_s: 600 }
       ]
     }
   ];

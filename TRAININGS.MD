@@ -173,6 +173,29 @@ Increase top-end sprint power.
 - Sprint performance
 - Low-fatigue high-quality work
 
+---
+
+## 9. VO₂ Max (4×4:10)
+
+**Purpose:**  
+VO₂max development with sustained supra-threshold efforts and half-length recoveries.
+
+### Session
+- **4 × 4:10 @ ~117% FTP**
+- **2:05 recovery @ ~57% FTP** (half the load duration)
+
+### Example (FTP 230W)
+1. 15 min warm-up
+2. 4 × (4:10 @ 270W + 2:05 @ 130W)
+3. 10 min cooldown @ 130W
+
+**Total: 50 min**
+
+### Good for
+- VO₂max gains
+- High-end aerobic power
+- Time-efficient hard sessions
+
 # Structure
 
 ```JSON
