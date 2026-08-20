@@ -172,5 +172,21 @@
       },
       { "type": "relative", "load_rel": 57, "name": "Cooldown", "duration_s": 600 }
     ]
+  },
+  {
+    "name": "Race-Week Sharpening",
+    "description": "Short, well-rested efforts to keep the legs snappy during a taper. Cuts volume but touches race intensity. Tuned for a 230W FTP (~214W efforts) but scales to any FTP. You should finish feeling like you could do it all again.",
+    "steps": [
+      { "type": "relative", "load_rel": 50, "name": "Warm-up", "duration_s": 780 },
+      {
+        "type": "repeat",
+        "repeat_times": 5,
+        "steps": [
+          { "type": "relative", "load_rel": 93, "name": "Sharpening Effort", "duration_s": 90 },
+          { "type": "relative", "load_rel": 45, "name": "Recovery", "duration_s": 165 }
+        ]
+      },
+      { "type": "relative", "load_rel": 40, "name": "Cooldown", "duration_s": 540 }
+    ]
   }
 ]
