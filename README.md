@@ -20,10 +20,10 @@ Download this repo and open `/dist/opencrank.html` in your browser. Or go [openc
 
 ## Next steps
 
-- [ ] Set your FTP / weight to display zone
-- [ ] Display historic wattage over past minutes
-- [ ] Predefine trainings based on current science (use JSON to make it easily extendable), e.g. "Rønnestad-Intervals"
-- [ ] When you're in training mode, make it easy to make it a bit harder / easier with dedicated buttons
+- [x] Set your FTP / weight to display zone
+- [x] Display historic wattage over past minutes
+- [x] Predefine trainings based on current science (use JSON to make it easily extendable), e.g. "Rønnestad-Intervals"
+- [x] When you're in training mode, make it easy to make it a bit harder / easier with dedicated buttons
 - [ ] Create a cool logo
 
 ## Guiding principles 
