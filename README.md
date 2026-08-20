@@ -4,6 +4,8 @@
 
 Forever free indoor cycle training
 
+<img width="1080" height="2340" alt="Screenshot_20260602_175008_Chrome (1)" src="https://github.com/user-attachments/assets/445a26e1-fbff-4501-947b-127892db7758" />
+
 ## Why?
 If you don't get why you should pay $15 per month to set the wattage of you Hometrainer: this is for you. Sure: You'll loose horrible 3D graphics.
 
